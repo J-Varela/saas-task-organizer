@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My Tasks</h2>
+
+<form method="POST" action="{{ url_for('tasks.add_task') }}" class="mb-4">
+  <div class="input-group">
+    <input type="text" name="description" placeholder="New task..." class="form-control" required>
+    <button type="submit" class="btn btn-primary">Add Task</button>
+  </div>
+</form>
+
+<ul class="list-group">
+  {% for task in tasks %}
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    <span {% if task.is_complete %}style="text-decoration: line-through;"{% endif %}>
+      {{ task.description }}
+    </span>
+    <div>
+      {% if not task.is_complete %}
+      <a href="{{ url_for('tasks.complete_task', task_id=task.id) }}" class="btn btn-sm btn-outline-success me-2">Complete</a>
+      {% endif %}
+      <a href="{{ url_for('tasks.delete_task', task_id=task.id) }}" class="btn btn-sm btn-outline-danger">Delete</a>
+    </div>
+  </li>
+  {% else %}
+  <li class="list-group-item">No tasks yet. Add one above!</li>
+  {% endfor %}
+</ul>
+
+<a href="{{ url_for('auth.logout') }}" class="btn btn-link mt-4">Logout</a>
+{% endblock %}
